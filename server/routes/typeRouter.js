@@ -8,8 +8,8 @@ const checkRole = require('../middleware/checkRoleMiddleware')
 router.post('/', checkRole, typeController.create);
 router.get('/', typeController.getAll);
 router.get('/:id', typeController.getOne);
-router.put('/', typeController.update);
-router.delete('/:id', typeController.delete);
+router.put('/', checkRole, typeController.update);
+router.delete('/:id', checkRole, typeController.delete);
 
 
 module.exports = router
