@@ -67,7 +67,7 @@ class DeviceController {
         try {
             let { id, name, price, brandId, typeId, } = req.body;
             const device = await Device.findOne({ where: { id } })
-            device.Device.update({ where: name, price, brandId, typeId, })
+                // device.Device.update({ where: name, price, brandId, typeId, })
                 // const { img } = req.files;
                 // let fileName = uuid.v4() + '.jpg';
                 // img.mv(path.resolve(__dirname, '..', 'static', fileName));
