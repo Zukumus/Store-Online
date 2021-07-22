@@ -1,4 +1,4 @@
-const { Device, DeviceInfo } = require('../models/models');
+const { Device, DeviceInfo, Type, Brand } = require('../models/models');
 const ApiError = require('../error/ApiError');
 const uuid = require('uuid');
 const path = require('path');
@@ -8,6 +8,10 @@ class DeviceController {
     async create(req, res, next) {
         try {
             let { name, price, brandId, typeId, info } = req.body;
+            const nameDevice = await Device.findOne({ where: { name } })
+            if (nameDevice) {
+                return next(ApiError.badRequest('name busy'))
+            };
             const { img } = req.files;
             let fileName = uuid.v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
@@ -22,13 +26,33 @@ class DeviceController {
                     })
                 });
             }
-            return res.json(device);
-
+            return res.json(device,);
         } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }
 
+    // async getAll(req, res, next) {
+    //     try {
+    //         let { brandId, typeId, page, limit, } = req.query
+    //         page = page || 1
+    //         limit = limit || 9
+    //         let offset = page * limit - limit
+    //         let devices;
+    //         if (!brandId && !typeId) {
+    //             devices = await Device.findAndCountAll({ limit, offset })
+    //         } else if (typeId && !brandId) {
+    //             devices = await Device.findAndCountAll({ where: { typeId }, limit, offset })
+    //         } else if (brandId && !typeId) {
+    //             devices = await Device.findAndCountAll({ where: { brandId }, limit, offset })
+    //         } else if (brandId && typeId) {
+    //             devices = await Device.findAndCountAll({ where: { brandId, typeId }, limit, offset })
+    //         }
+    //         return res.json(devices)
+    //     } catch (e) {
+    //         next(ApiError.badRequest(e.message))
+    //     }
+    // };
     async getAll(req, res, next) {
         try {
             let { brandId, typeId, page, limit, } = req.query
@@ -67,21 +91,21 @@ class DeviceController {
         try {
             let { id, name, price, brandId, typeId, } = req.body;
             const device = await Device.findOne({ where: { id } })
-                // device.Device.update({ where: name, price, brandId, typeId, })
-                // const { img } = req.files;
-                // let fileName = uuid.v4() + '.jpg';
-                // img.mv(path.resolve(__dirname, '..', 'static', fileName));
-                // const device = await Device.update({ where: { name, price, brandId, typeId, } })
-                // if (info) {
-                //     info = JSON.parse(info)
-                //     info.forEach(i => {
-                //         DeviceInfo.update({
-                //             title: i.title,
-                //             description: i.description,
-                //             deviceId: device.id
-                //         })
-                //     });
-                // }
+            // device.Device.update({ where: name, price, brandId, typeId, })
+            // const { img } = req.files;
+            // let fileName = uuid.v4() + '.jpg';
+            // img.mv(path.resolve(__dirname, '..', 'static', fileName));
+            // const device = await Device.update({ where: { name, price, brandId, typeId, } })
+            // if (info) {
+            //     info = JSON.parse(info)
+            //     info.forEach(i => {
+            //         DeviceInfo.update({
+            //             title: i.title,
+            //             description: i.description,
+            //             deviceId: device.id
+            //         })
+            //     });
+            // }
             return res.json(device);
 
         } catch (e) {

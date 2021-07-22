@@ -61,8 +61,15 @@ class UserController {
     };
 
     async update(req, res, next) {
-        // const type = await Type.findOne(req.body)
-        // return type
+        try {
+            const { id } = req.body
+            const updateUser = await User.update(req.body, {
+                where: { id: id }
+            })
+            return res.json(req.body)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
     };
 
     async delete(req, res, next) {
